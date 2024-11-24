@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<h2>About</h2>
+<p>I reworked a music recommendation system I made back in 2022 using the Spotify API based on a <a href="https://developer.spotify.com/documentation/web-api/reference/#/operations/get-users-top-artists-and-tracks">user's top tracks within the last 4 weeks</a>. Users can (and quite frankly, most likely will) get song recommendations from all over the world.</p>
+<h3>How It Works</h3>
+<p>After getting a user's top tracks, I used <a href="https://www.kaggle.com/datasets/darrylljk/spotify-tracks">this</a> dataset from Kaggle to recommend songs by using KMeans to recommend songs within the songs from the largest occuring cluster in a user's top tracks and by using the Euclidean distance to find tracks closest to the weighted average of a user's top tracks. I also multiplied the two metrics to achieve a combined result. As language was not used to train the models, users may be recommended songs from other languages.</p>
+<p>Users can also listen to previews of the songs (except for those that do not have preview urls) and create a playlist with those 15 songs if they'd like.</p>
+{% endblock %}

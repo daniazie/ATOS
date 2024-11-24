@@ -1,0 +1,21 @@
+services:
+  recsys:
+    build: ./flask
+    networks:
+      - composenet
+    restart: always
+    expose:
+      - 8080
+
+  myserver:
+    build: ./nginx
+    networks:
+      - composenet
+    ports:
+      - "80:80"
+    depends_on:
+      - recsys
+    restart: always
+
+networks:
+  composenet:

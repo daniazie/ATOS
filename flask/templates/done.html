@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block head %} 
+<script src='/static/js/audiojs.js' defer>
+</script>
+<style>
+    .fa-regular {
+        color: black;
+    }
+
+    .fa-regular:hover{
+        color: sienna;
+    }
+
+    .list-unstyled > li {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 18px;
+    }
+
+    .btn-primary {
+        background-color: lightseagreen !important;
+        border-color:lightseagreen !important;
+        padding:8px 10px 5px 10px !important;
+    }
+
+    .btn-primary:hover {
+    background-color:sienna !important;
+    border-color: sienna !important;
+    }
+
+    .btn-secondary {
+        background-color: lightseagreen !important;
+        border-color: lightseagreen !important;
+        padding:8px 10px 5px 10px !important;
+    }
+
+    .btn-secondary:hover {
+    background-color:sienna !important;
+    border-color: sienna !important;
+    }
+
+    .btn-secondary.selected {
+        background-color: sienna !important;
+        border-color: sienna !important;
+    }
+
+
+</style>
+{% endblock %}
+
+{% block title %}Top 15 Recommendations{% endblock %}
+
+{% block body %}
+<center>
+    <br>
+        <h3><b>Your Recommended Tracks:</b></h3>
+    <h4>
+    <div class="container">
+        <p><p>
+        <ul class="list-unstyled">
+            <p>
+            {% if 'success' in status %}
+            <div class="button-group">
+                <form action="/recommendations" method="get">
+                    <!-- Button 1: distance_weight + cluster_weight -->
+                    <button type="submit" name="metric" class="btn btn-secondary weight_button {% if metric == 'NA' %} selected {% endif %}" value="weight">Distance + Cluster Weight</button>
+                    
+                    <!-- Button 2: distance_weight only -->
+                    <button type="submit" name="metric" class="btn btn-secondary weight_button {% if metric == 'distance' %} selected {% endif %}" value="distance">Distance Weight Only</button>
+                    
+                    <!-- Button 3: cluster_weight only -->
+                    <button type="submit" name="metric" class="btn btn-secondary weight_button {% if metric == 'cluster' %} selected {% endif %}" value="cluster">Cluster Weight Only</button>
+                </form>
+            </div>
+            &nbsp;
+                {% for track in tracks_list %}
+                    <li>{{ track['name'] }} - {{ track['artists'] }}
+                    {% if track['track_url'] is not none and 'succeed' in track['msg'] %}
+                        <div class="fake-player">
+                            <button id="play-button" class="play" style="background-color:transparent;border-color:transparent"><i id="play" class="fa-regular fa-circle-play"><audio id = "player">
+                                <source src="{{ track['track_url'] }}" preload="auto">
+                                Your browser does not support the audio element.
+                            </audio></i></button>
+                        </div>
+                    {% endif %}</li><br>
+                {% endfor %}
+                <form action="\create" method="post">
+                    <button type="submit" name="song" class="btn btn-primary spotify_button" id="" value="create playlist">Create Playlist <i class="fab fa-spotify"></i></button>
+                    
+                    {% if message is defined %}
+                        {% if 'Playlist created.' in message %}
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <ul>
+                                    <li>{{ message }}</li>
+                                </ul>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <ul>
+                                    <li>{{ message }}</li>
+                                </ul>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                </form> 
+            {% endif %}               
+        </ul>
+    <br />
+    <script>
+        function highlightButton(button) {
+            // Remove the 'highlighted' class from all buttons
+            var buttons = document.getElementsByClassName('weight_button');
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove('highlighted');
+            }
+            // Add the 'highlighted' class to the clicked button
+            button.classList.add('highlighted');
+        }
+    </script>
+{% endblock %}
